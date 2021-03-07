@@ -50,7 +50,7 @@ ActiveRecord::Schema.define(version: 2021_03_07_161631) do
     t.datetime "event_date", null: false
     t.integer "track_id", null: false
     t.integer "grade", null: false
-    t.integer "is_finish", null: false
+    t.integer "is_finish", default: 0, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "deleted_at"
