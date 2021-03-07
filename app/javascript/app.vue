@@ -1,32 +1,14 @@
 <template>
   <v-app id="app">
-    <v-btn>Vuetifyのボタン</v-btn>
-    <div>
-      <p>{{ message }}</p>
-      <p>{{ panda }}</p>
-    </div>
+    <router-view/>
   </v-app>
 </template>
 
-<script>
+<script lang='ts'>
 import tenAxios from '../javascript/packs/lib/tenAxios'
 
 export default {
-  data: function () {
-    return {
-      message: "Hello Vue!",
-      panda: {}
-    }
-  },
-  mounted() {
-    this.fetchPanda()
-  },
-  methods: {
-    async fetchPanda () {
-      const result = await tenAxios.get('home')
-      this.panda = result
-    }
-  }
+  name: 'App'
 }
 </script>
 
