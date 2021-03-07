@@ -1,1 +1,1 @@
-json.panda @panda
+json.panda_kopanda @panda

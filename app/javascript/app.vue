@@ -1,17 +1,30 @@
 <template>
-  <v-app id="app"> <!-- 追加 -->
-    <v-btn>Vuetifyのボタン</v-btn> <!-- 追加 -->
-    <div>  <!-- 更新 -->
+  <v-app id="app">
+    <v-btn>Vuetifyのボタン</v-btn>
+    <div>
       <p>{{ message }}</p>
+      <p>{{ panda }}</p>
     </div>
-  </v-app> <!-- 追加 -->
+  </v-app>
 </template>
 
 <script>
+import tenAxios from '../javascript/packs/lib/tenAxios'
+
 export default {
   data: function () {
     return {
-      message: "Hello Vue!"
+      message: "Hello Vue!",
+      panda: {}
+    }
+  },
+  mounted() {
+    this.fetchPanda()
+  },
+  methods: {
+    async fetchPanda () {
+      const result = await tenAxios.get('home')
+      this.panda = result
     }
   }
 }
