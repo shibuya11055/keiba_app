@@ -15,8 +15,8 @@ ActiveRecord::Schema.define(version: 2021_03_07_161631) do
   create_table "horses", force: :cascade do |t|
     t.string "name", limit: 10, null: false
     t.integer "gender", null: false
-    t.date "birthday", null: false
-    t.integer "jockey_id", null: false
+    t.date "birthday"
+    t.integer "traner_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "deleted_at"
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 2021_03_07_161631) do
     t.integer "jockey_id"
     t.integer "ranking"
     t.integer "post_position"
+    t.integer "horse_order"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "deleted_at"
@@ -47,7 +48,7 @@ ActiveRecord::Schema.define(version: 2021_03_07_161631) do
 
   create_table "races", force: :cascade do |t|
     t.string "name", null: false
-    t.datetime "event_date", null: false
+    t.date "event_date", null: false
     t.integer "track_id", null: false
     t.integer "grade", null: false
     t.integer "is_finish", default: 0, null: false
