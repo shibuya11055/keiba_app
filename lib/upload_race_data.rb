@@ -7,3 +7,5 @@ class UploadRaceData
     end
   end
 end
+
+# 日時,レース名,グレード,距離,種別,着順,馬名,性別,騎手,調教師
