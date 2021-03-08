@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 2021_03_07_161631) do
     t.integer "jockey_id"
     t.integer "ranking"
     t.integer "post_position"
+    t.integer "horse_order"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "deleted_at"

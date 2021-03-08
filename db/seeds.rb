@@ -58,13 +58,15 @@ RaceHorse.create!([
     race_id: race.id,
     jockey_id: jockey1.id,
     ranking: 1,
-    post_position: 1
+    post_position: 1,
+    horse_order: 1
   },
   {
     horse_id: hourse2.id,
     race_id: race.id,
     jockey_id: jockey2.id,
     ranking: 2,
-    post_position: 2
+    post_position: 2,
+    horse_order: 2
   }
 ])

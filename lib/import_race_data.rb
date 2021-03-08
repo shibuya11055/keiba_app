@@ -6,7 +6,7 @@ require 'csv'
 class ImportRaceData
 
   INDEX_YEAR = [2020, 2021] # データを取得したい年
-  CSV_HEADER = ['日時', 'レース名', 'グレード', '距離', '種別', '着順', '馬名', '性別', '騎手', '調教師']
+  CSV_HEADER = ['日時', '競馬場', 'レース名', 'グレード', '距離', '種別', '着順', '枠', '馬番', '馬名', '性別', '騎手', '調教師']
 
   def setup_doc(url)
     doc = Nokogiri::HTML.parse(URI.open(url, "r:CP932").read)
@@ -18,6 +18,10 @@ class ImportRaceData
     horse_data = []
     # 着順
     horse_data << data.children[1].text
+    # 枠
+    horse_data << data.children[3].children[0].values.second[1]
+    # 馬番
+    horse_data << data.children[5].children.text
     # 馬名
     horse_data << data.children[7].text
     # 性別
@@ -32,8 +36,11 @@ class ImportRaceData
 
   def race_info(doc)
     race_info = []
+    date_text = doc.xpath("//div[@class='cell date']").text
     # 日時
-    race_info << doc.xpath("//div[@class='cell date']").text.split('（').first.gsub(/年|月|日/, '年'=>'/', '月'=>'/', '日'=>'/')
+    race_info << date_text.split('（').first.gsub(/年|月|日/, '年'=>'/', '月'=>'/', '日'=>'/')
+    # 競馬場
+    race_info << date_text.split('回').second[0,2]
     # レース名
     race_info << doc.xpath("//span[@class='race_name']").text
     # グレード
@@ -41,7 +48,7 @@ class ImportRaceData
 
     course = doc.xpath("//div[@class='cell course']").text.delete('コース：メートル').split('（')
     # 距離
-    race_info << course.first
+    race_info << course.first.delete(',')
     # 種別
     race_info << course.second.split('・').first
 
