@@ -1,5 +1,6 @@
 <template>
   <v-app id="app">
+    <link href="https://fonts.googleapis.com/earlyaccess/mplus1p.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
     <Sidenav class="navmenu" />
     <v-main>
@@ -27,9 +28,13 @@ export default defineComponent({
 main {
   width: 80% !important;
   margin: 0 0 0 auto;
+  padding: 30px !important;
 }
 .navmenu {
   width: 20% !important;
   background-color: snow !important;
+}
+h1 {
+  margin-bottom: 40px;
 }
 </style>
