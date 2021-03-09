@@ -8,7 +8,7 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
-        "*": ["node_modules/*", "app/javascript/*", "app/javascript/packs/*"]
+        "*": ["node_modules/*", "app/javascript/*", "app/javascript/packs/*", "app/javascript/components/*"]
     },
     "sourceMap": true,
     "target": "es5"
