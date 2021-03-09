@@ -46,6 +46,7 @@ const items = [
 ]
 
 export default defineComponent({
+  name: 'Sidenav',
   setup(_, context) {
     const router = context.root.$router
     const changePath = (pathName: string) => {
