@@ -1,0 +1,6 @@
+ja:
+  enums:
+    track:
+      field_type:
+        turf: 芝
+        dirt: ダート
