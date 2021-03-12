@@ -9,7 +9,7 @@
           clearable
         ></v-text-field>
       </v-col>
-      <v-col cols="12" sm="5">
+      <v-col cols="12" sm="4">
         <v-btn large color="primary">登録する</v-btn>
       </v-col>
     </v-row>

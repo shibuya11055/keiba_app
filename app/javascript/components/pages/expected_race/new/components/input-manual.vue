@@ -16,11 +16,16 @@
         <!-- ポップアップされる内容-->
         <v-date-picker v-model="fromDate" />
       </v-menu>
-      <v-text-field
-        v-model="raceName"
+      <!-- レース名 -->
+      <v-autocomplete
+        v-model="selectedRace"
+        :items="candidateRaces"
+        :search-input.sync="raceName"
         label="レース名"
-        required
-      ></v-text-field>
+        item-value="id"
+        item-text="name"
+      ></v-autocomplete>
+      <!-- グレード -->
       <v-radio-group row label="グレード">
         <v-radio label="GⅠ" value="one" color="blue"></v-radio>
         <v-radio label="GⅡ" value="two" color="red"></v-radio>
@@ -29,7 +34,7 @@
       <!-- 競走馬情報 -->
       <h3>競走馬情報</h3>
       <v-row v-for="(horseInfo, index) in horseInfos" :key="horseInfo.name">
-        <v-col cols="12" md="4">
+        <v-col cols="12" md="6">
           <v-text-field
             v-model="horseInfo.name"
             :counter="9"
@@ -37,17 +42,10 @@
             required
           ></v-text-field>
         </v-col>
-        <v-col cols="12" md="4">
+        <v-col cols="12" md="6">
           <v-text-field
             v-model="horseInfo.jockeyName"
             label="騎手"
-            required
-          ></v-text-field>
-        </v-col>
-        <v-col cols="12" md="4">
-          <v-text-field
-            v-model="horseInfo.tranerName"
-            label="調教師"
             required
           ></v-text-field>
         </v-col>
@@ -103,15 +101,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from '@vue/composition-api';
+import { defineComponent, ref, watch } from '@vue/composition-api';
+import { throttle } from 'lodash';
 
 export default defineComponent({
   name: 'InputManual',
-  setup() {
+  props: {
+    candidateRaces: {
+      type: Array,
+      required: false,
+    }
+  },
+  setup(props, { emit }) {
     const name = ref('')
     const raceName = ref('')
     const menu = ref('')
     const fromDate = ref('')
+    const selectedRace = ref('')
 
     const horseInfo = {
       horseName: '',
@@ -129,7 +135,21 @@ export default defineComponent({
       horseInfos.value.pop()
     }
 
+    const searchRaceName = (val: string) => {
+      emit('search-race', val)
+    }
+
+    watch(
+      () => raceName.value,
+      throttle((name: string) => {
+        if (props.candidateRaces.length > 0) return
+        searchRaceName(name)
+      }, 1000)
+    )
+
     return {
+      selectedRace,
+      searchRaceName,
       addHorseInfo,
       removeHorseInfo,
       horseInfos,
