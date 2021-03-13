@@ -62,10 +62,9 @@
         class="footer-btn-area"
       >
         <v-btn
-          v-if="horseInfos.length > 1"
+          v-if="horseInfos.length"
           class="mx-2"
           fab
-          dark
           large
           color="gray"
           @click="removeHorseInfo"
@@ -77,9 +76,9 @@
         <v-btn
           class="mx-2"
           fab
-          dark
           large
           color="deep-orange"
+          :disabled="!(selectedHorseId && selectedJockeyId)"
           @click="addHorseInfo"
         >
           <v-icon dark>
@@ -88,6 +87,34 @@
         </v-btn>
       </v-row>
     </v-form>
+    <!-- 登録候補テーブル -->
+    <div v-if="horseInfos.length" class="caindidate-registration">
+      <h3>登録候補</h3>
+      <v-simple-table dense>
+        <template v-slot:default>
+          <thead>
+            <tr>
+              <th class="text-left">
+                馬番
+              </th>
+              <th class="text-left">
+                馬名
+              </th>
+              <th class="text-left">
+                騎手
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(horseInfo, index) in horseInfos" :key="horseInfo.horseId">
+              <td>{{ index + 1 }}</td>
+              <td>{{ horseInfo.selectedHorseName }}</td>
+              <td>{{ horseInfo.selectedJockeyName }}</td>
+            </tr>
+          </tbody>
+        </template>
+      </v-simple-table>
+    </div>
     <!-- クリア・登録ボタン -->
     <div class="submit-area-line"></div>
     <v-row
@@ -142,11 +169,29 @@ export default defineComponent({
       horseId: 0,
       jockeyId: 0,
     }
-    const horseInfos = ref([horseInfo])
+    const horseInfos = ref([])
 
     const addHorseInfo = () => {
-      // horseInfos.value.push(horseInfo)
-      // horseInfos.value = horseInfos.value.map( horseInfo => ({...horseInfo}))
+      const horseId = selectedHorseId.value
+      const selectedHorseName = horseName.value
+      const jockeyId = selectedJockeyId.value
+      const selectedJockeyName = jockeyName.value
+      initializeSearchData()
+
+      const horseInfo = {
+        horseId,
+        selectedHorseName,
+        jockeyId,
+        selectedJockeyName
+      }
+      horseInfos.value.push(horseInfo)
+    }
+
+    const initializeSearchData = () => {
+      horseName.value = ''
+      jockeyName.value = ''
+      selectedHorseId.value = 0
+      selectedJockeyId.value = 0
     }
 
     const removeHorseInfo = () => {
