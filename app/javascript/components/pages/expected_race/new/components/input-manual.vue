@@ -26,7 +26,7 @@
         item-text="name"
       ></v-autocomplete>
       <!-- グレード -->
-      <v-radio-group row label="グレード">
+      <v-radio-group row label="グレード" v-model="selectedGrade">
         <v-radio label="GⅠ" value="one" color="blue"></v-radio>
         <v-radio label="GⅡ" value="two" color="red"></v-radio>
         <v-radio label="GⅢ" value="three" color="green"></v-radio>
@@ -122,10 +122,10 @@
       justify="end"
       class="submit-area"
     >
-      <v-btn depressed>
+      <v-btn depressed @click="clearData">
         クリア
       </v-btn>
-      <v-btn depressed color="primary">
+      <v-btn depressed color="primary" @click="onSubmit">
         登録
       </v-btn>
     </v-row>
@@ -149,8 +149,8 @@ export default defineComponent({
     },
     candidateJockeys: {
       type: Array,
-      required: false
-    }
+      required: false,
+    },
   },
   emits: ['search-race', 'search-horse', 'search-jockey'],
 
@@ -161,14 +161,11 @@ export default defineComponent({
     const selectedRaceId = ref(0)
     const selectedHorseId = ref(0)
     const selectedJockeyId = ref(0)
+    const selectedGrade = ref('')
 
     const isOpenCalender = ref(false)
     const raceDate = ref('')
 
-    const horseInfo = {
-      horseId: 0,
-      jockeyId: 0,
-    }
     const horseInfos = ref([])
 
     const addHorseInfo = () => {
@@ -234,6 +231,25 @@ export default defineComponent({
       }, 1000)
     )
 
+    const clearData = () => {
+      raceDate.value = ''
+      selectedRaceId.value = 0
+      selectedGrade.value = ''
+      horseInfos.value = []
+      initializeSearchData()
+    }
+
+    const onSubmit = () => {
+      const params = {
+        date: raceDate.value,
+        raceId: selectedRaceId.value,
+        horseInfo: horseInfos.value,
+        grade: selectedGrade.value,
+      }
+
+      emit('create-candidate-race', params)
+    }
+
     return {
       raceName,
       selectedRaceId,
@@ -241,11 +257,14 @@ export default defineComponent({
       selectedHorseId,
       jockeyName,
       selectedJockeyId,
+      selectedGrade,
       addHorseInfo,
       removeHorseInfo,
       horseInfos,
       isOpenCalender,
       raceDate,
+      clearData,
+      onSubmit,
     }
   }
 })

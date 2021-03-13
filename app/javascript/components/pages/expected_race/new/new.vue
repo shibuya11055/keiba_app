@@ -11,7 +11,16 @@
       @search-race="fetchCandidateRace"
       @search-horse="fetchCandidateHorse"
       @search-jockey="fetchCandidateJockey"
+      @create-candidate-race="createCandidateRace"
     />
+
+    <v-snackbar
+      v-model="snackbar"
+      absolute
+      bottom
+    >
+      Lorem ipsum dolor sit amet consectetur.
+    </v-snackbar>
   </div>
 </template>
 
@@ -55,7 +64,6 @@ const userFetchCandidateJockey= () => {
   const candidateJockeys = ref([])
   const fetchCandidateJockey = async(name: string) => {
     const res = await tenAxios.get('/expected_races/candidate_jockeys', { params: { name: name} })
-    console.log(res)
     candidateJockeys.value = res.data.candidateJockeys
   }
 
@@ -77,13 +85,22 @@ export default defineComponent({
     const { candidateHorses, fetchCandidateHorse } = useFetchCandidateHorse()
     const { candidateJockeys, fetchCandidateJockey } = userFetchCandidateJockey()
 
+
+    const snackbar = ref(false)
+    const createCandidateRace = (params) => {
+      snackbar.value = true
+      console.log(params)
+    }
+
     return {
       candidateRaces,
       fetchCandidateRace,
       candidateHorses,
       fetchCandidateHorse,
       candidateJockeys,
-      fetchCandidateJockey
+      fetchCandidateJockey,
+      createCandidateRace,
+      snackbar
     }
   },
 })
