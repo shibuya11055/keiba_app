@@ -7,8 +7,10 @@
     <input-manual
       :candidate-races="candidateRaces"
       :candidate-horses="candidateHorses"
+      :candidate-jockeys="candidateJockeys"
       @search-race="fetchCandidateRace"
       @search-horse="fetchCandidateHorse"
+      @search-jockey="fetchCandidateJockey"
     />
   </div>
 </template>
@@ -49,6 +51,20 @@ const useFetchCandidateHorse = () => {
   }
 }
 
+const userFetchCandidateJockey= () => {
+  const candidateJockeys = ref([])
+  const fetchCandidateJockey = async(name: string) => {
+    const res = await tenAxios.get('/expected_races/candidate_jockeys', { params: { name: name} })
+    console.log(res)
+    candidateJockeys.value = res.data.candidateJockeys
+  }
+
+  return {
+    candidateJockeys,
+    fetchCandidateJockey
+  }
+}
+
 export default defineComponent({
   name: 'ExpectedRaceNew',
   components: {
@@ -59,12 +75,15 @@ export default defineComponent({
   setup() {
     const { candidateRaces, fetchCandidateRace } = useFetchCandidateRace()
     const { candidateHorses, fetchCandidateHorse } = useFetchCandidateHorse()
+    const { candidateJockeys, fetchCandidateJockey } = userFetchCandidateJockey()
 
     return {
       candidateRaces,
       fetchCandidateRace,
       candidateHorses,
-      fetchCandidateHorse
+      fetchCandidateHorse,
+      candidateJockeys,
+      fetchCandidateJockey
     }
   },
 })

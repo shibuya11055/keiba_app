@@ -10,6 +10,7 @@ Rails.application.routes.draw do
         collection do
           get :candidate_races
           get :candidate_horses
+          get :candidate_jockeys
         end
       end
     end

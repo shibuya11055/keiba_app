@@ -45,11 +45,14 @@
           ></v-autocomplete>
         </v-col>
         <v-col cols="12" md="6">
-          <v-text-field
+          <v-autocomplete
             v-model="selectedJockeyId"
-            label="騎手"
-            required
-          ></v-text-field>
+            :items="candidateJockeys"
+            :search-input.sync="jockeyName"
+            :label="'騎手'"
+            item-value="id"
+            item-text="name"
+          ></v-autocomplete>
         </v-col>
       </v-row>
       <!-- 削除・追加ボタン -->
@@ -116,18 +119,24 @@ export default defineComponent({
     candidateHorses: {
       type: Array,
       required: false
+    },
+    candidateJockeys: {
+      type: Array,
+      required: false
     }
   },
-  emits: ['search-race', 'search-horse'],
+  emits: ['search-race', 'search-horse', 'search-jockey'],
 
   setup(props, { emit }) {
     const raceName = ref('')
     const horseName = ref('')
-    const isOpenCalender = ref(false)
-    const raceDate = ref('')
+    const jockeyName = ref('')
     const selectedRaceId = ref(0)
     const selectedHorseId = ref(0)
     const selectedJockeyId = ref(0)
+
+    const isOpenCalender = ref(false)
+    const raceDate = ref('')
 
     const horseInfo = {
       horseId: 0,
@@ -152,6 +161,10 @@ export default defineComponent({
       emit('search-horse', val)
     }
 
+    const searchJockeyName = (val: string) => {
+      emit('search-jockey', val)
+    }
+
     watch(
       () => raceName.value,
       throttle((name: string) => {
@@ -168,16 +181,24 @@ export default defineComponent({
       }, 1000)
     )
 
+    watch(
+      () => jockeyName.value,
+      throttle((name: string) => {
+        if (props.candidateJockeys.length > 0) return
+        searchJockeyName(name)
+      }, 1000)
+    )
+
     return {
+      raceName,
       selectedRaceId,
-      selectedHorseId,
-      selectedJockeyId,
       horseName,
-      searchHorseName,
+      selectedHorseId,
+      jockeyName,
+      selectedJockeyId,
       addHorseInfo,
       removeHorseInfo,
       horseInfos,
-      raceName,
       isOpenCalender,
       raceDate,
     }

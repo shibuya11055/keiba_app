@@ -14,6 +14,11 @@ class Api::V1::ExpectedRacesController < Api::V1::ApiController
     render 'api/v1/expected_races/candidate_horses', status: :ok
   end
 
+  def candidate_jockeys
+    @jockeys = Jockey.where("name LIKE ?", "%#{candidate_jockey_params[:name]}%")
+    render 'api/v1/expected_races/candidate_jockeys', status: :ok
+  end
+
   private
 
   def race_name_params
@@ -23,6 +28,12 @@ class Api::V1::ExpectedRacesController < Api::V1::ApiController
   end
 
   def candidate_horse_params
+    params.permit(
+      :name
+    )
+  end
+
+  def candidate_jockey_params
     params.permit(
       :name
     )
