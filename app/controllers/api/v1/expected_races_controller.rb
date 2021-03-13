@@ -9,9 +9,20 @@ class Api::V1::ExpectedRacesController < Api::V1::ApiController
     render 'api/v1/expected_races/candidate_races', status: :ok
   end
 
+  def candidate_horses
+    @horses = Horse.where("name LIKE ?", "%#{candidate_horse_params[:name]}%")
+    render 'api/v1/expected_races/candidate_horses', status: :ok
+  end
+
   private
 
   def race_name_params
+    params.permit(
+      :name
+    )
+  end
+
+  def candidate_horse_params
     params.permit(
       :name
     )

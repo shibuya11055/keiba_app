@@ -9,6 +9,7 @@ Rails.application.routes.draw do
       resources :expected_races, only: [:new] do
         collection do
           get :candidate_races
+          get :candidate_horses
         end
       end
     end

@@ -2,23 +2,23 @@
   <div class="input-manual">
     <h2>手動登録</h2>
     <v-form>
-      <v-menu v-model="menu" max-width="290px" min-width="290px">
+      <v-menu v-model="isOpenCalender" max-width="290px" min-width="290px">
         <!-- ポップアップを追加する要素にv-on="on" -->
         <template v-slot:activator="{ on }">
           <v-text-field
             slot="activator"
-            v-model="fromDate"
+            v-model="raceDate"
             label="日程"
             readonly
             v-on="on"
           />
         </template>
         <!-- ポップアップされる内容-->
-        <v-date-picker v-model="fromDate" />
+        <v-date-picker v-model="raceDate" />
       </v-menu>
       <!-- レース名 -->
       <v-autocomplete
-        v-model="selectedRace"
+        v-model="selectedRaceId"
         :items="candidateRaces"
         :search-input.sync="raceName"
         label="レース名"
@@ -33,18 +33,20 @@
       </v-radio-group>
       <!-- 競走馬情報 -->
       <h3>競走馬情報</h3>
-      <v-row v-for="(horseInfo, index) in horseInfos" :key="horseInfo.name">
+      <v-row>
         <v-col cols="12" md="6">
-          <v-text-field
-            v-model="horseInfo.name"
-            :counter="9"
-            :label="`馬名（馬番: ${index + 1})`"
-            required
-          ></v-text-field>
+          <v-autocomplete
+            v-model="selectedHorseId"
+            :items="candidateHorses"
+            :search-input.sync="horseName"
+            :label="'馬名'"
+            item-value="id"
+            item-text="name"
+          ></v-autocomplete>
         </v-col>
         <v-col cols="12" md="6">
           <v-text-field
-            v-model="horseInfo.jockeyName"
+            v-model="selectedJockeyId"
             label="騎手"
             required
           ></v-text-field>
@@ -110,25 +112,32 @@ export default defineComponent({
     candidateRaces: {
       type: Array,
       required: false,
+    },
+    candidateHorses: {
+      type: Array,
+      required: false
     }
   },
+  emits: ['search-race', 'search-horse'],
+
   setup(props, { emit }) {
-    const name = ref('')
     const raceName = ref('')
-    const menu = ref('')
-    const fromDate = ref('')
-    const selectedRace = ref('')
+    const horseName = ref('')
+    const isOpenCalender = ref(false)
+    const raceDate = ref('')
+    const selectedRaceId = ref(0)
+    const selectedHorseId = ref(0)
+    const selectedJockeyId = ref(0)
 
     const horseInfo = {
-      horseName: '',
-      jockeyName: '',
-      tranerName: '',
+      horseId: 0,
+      jockeyId: 0,
     }
-
     const horseInfos = ref([horseInfo])
 
     const addHorseInfo = () => {
-      horseInfos.value.push(horseInfo)
+      // horseInfos.value.push(horseInfo)
+      // horseInfos.value = horseInfos.value.map( horseInfo => ({...horseInfo}))
     }
 
     const removeHorseInfo = () => {
@@ -139,6 +148,10 @@ export default defineComponent({
       emit('search-race', val)
     }
 
+    const searchHorseName = (val: string) => {
+      emit('search-horse', val)
+    }
+
     watch(
       () => raceName.value,
       throttle((name: string) => {
@@ -147,16 +160,26 @@ export default defineComponent({
       }, 1000)
     )
 
+    watch(
+      () => horseName.value,
+      throttle((name: string) => {
+        if (props.candidateHorses.length > 0) return
+        searchHorseName(name)
+      }, 1000)
+    )
+
     return {
-      selectedRace,
-      searchRaceName,
+      selectedRaceId,
+      selectedHorseId,
+      selectedJockeyId,
+      horseName,
+      searchHorseName,
       addHorseInfo,
       removeHorseInfo,
       horseInfos,
-      name,
       raceName,
-      menu,
-      fromDate,
+      isOpenCalender,
+      raceDate,
     }
   }
 })
