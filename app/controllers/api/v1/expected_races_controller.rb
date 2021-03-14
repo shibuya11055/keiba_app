@@ -1,5 +1,15 @@
 class Api::V1::ExpectedRacesController < Api::V1::ApiController
-  def new
+  def create
+    ActiveRecord::Base.transaction do
+      race = Race.new(create_params.reject{ |k, v| k == 'horse_info' })
+      race.race_horses.build(create_params[:horse_info])
+      race.save!
+
+      render json: race, status: :ok
+    rescue => e
+      Rails.logger.error e.message
+      render json:{ errors: e.message }, status: :internal_server_error
+    end
   end
 
   def candidate_races
@@ -37,5 +47,22 @@ class Api::V1::ExpectedRacesController < Api::V1::ApiController
     params.permit(
       :name
     )
+  end
+
+  def create_params
+    params.require(:expected_race).permit(
+      :event_date,
+      :name,
+      :track_id,
+      :grade,
+      horse_info: [
+        :horse_id,
+        :jockey_id,
+        :horse_order
+      ]
+    ).tap do |v|
+      v[:event_date] = v[:event_date].to_date
+      v[:is_finish] = 'opening'
+    end
   end
 end

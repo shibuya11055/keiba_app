@@ -19,7 +19,7 @@
       absolute
       bottom
     >
-      Lorem ipsum dolor sit amet consectetur.
+      {{ snackbarMessage }}
     </v-snackbar>
   </div>
 </template>
@@ -87,9 +87,15 @@ export default defineComponent({
 
 
     const snackbar = ref(false)
-    const createCandidateRace = (params) => {
+    const snackbarMessage = ref('')
+    const createCandidateRace = async(createParams) => {
+      const res = tenAxios.post('expected_races', { ...createParams })
+      // .then(
+      //   snackbarMessage.value = 'レース情報を登録しました'
+      // ).catch(
+
+      // )
       snackbar.value = true
-      console.log(params)
     }
 
     return {

@@ -18,7 +18,7 @@
       </v-menu>
       <!-- レース名 -->
       <v-autocomplete
-        v-model="selectedRaceId"
+        v-model="selectedTrackId"
         :items="candidateRaces"
         :search-input.sync="raceName"
         label="レース名"
@@ -27,9 +27,9 @@
       ></v-autocomplete>
       <!-- グレード -->
       <v-radio-group row label="グレード" v-model="selectedGrade">
-        <v-radio label="GⅠ" value="one" color="blue"></v-radio>
-        <v-radio label="GⅡ" value="two" color="red"></v-radio>
-        <v-radio label="GⅢ" value="three" color="green"></v-radio>
+        <v-radio label="GⅠ" value="g_one" color="blue"></v-radio>
+        <v-radio label="GⅡ" value="g_two" color="red"></v-radio>
+        <v-radio label="GⅢ" value="g_three" color="green"></v-radio>
       </v-radio-group>
       <!-- 競走馬情報 -->
       <h3>競走馬情報</h3>
@@ -158,7 +158,7 @@ export default defineComponent({
     const raceName = ref('')
     const horseName = ref('')
     const jockeyName = ref('')
-    const selectedRaceId = ref(0)
+    const selectedTrackId = ref(0)
     const selectedHorseId = ref(0)
     const selectedJockeyId = ref(0)
     const selectedGrade = ref('')
@@ -233,17 +233,22 @@ export default defineComponent({
 
     const clearData = () => {
       raceDate.value = ''
-      selectedRaceId.value = 0
+      selectedTrackId.value = 0
       selectedGrade.value = ''
       horseInfos.value = []
       initializeSearchData()
     }
 
     const onSubmit = () => {
+      const horseInfoParams = horseInfos.value.map((v, i) => {
+        v['horseOrder'] = i + 1
+        return v
+      })
       const params = {
-        date: raceDate.value,
-        raceId: selectedRaceId.value,
-        horseInfo: horseInfos.value,
+        eventDate: raceDate.value,
+        name: raceName.value.split('：')[0],
+        trackId: selectedTrackId.value,
+        horseInfo: horseInfoParams,
         grade: selectedGrade.value,
       }
 
@@ -252,7 +257,7 @@ export default defineComponent({
 
     return {
       raceName,
-      selectedRaceId,
+      selectedTrackId,
       horseName,
       selectedHorseId,
       jockeyName,
