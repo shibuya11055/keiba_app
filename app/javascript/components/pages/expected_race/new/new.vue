@@ -87,14 +87,15 @@ export default defineComponent({
 
 
     const snackbar = ref(false)
-    const snackbarMessage = ref('')
+    const snackbarMessage = ref<string>('')
     const createCandidateRace = async(createParams) => {
-      const res = tenAxios.post('expected_races', { ...createParams })
-      // .then(
-      //   snackbarMessage.value = 'レース情報を登録しました'
-      // ).catch(
-
-      // )
+      tenAxios.post('expected_races', { ...createParams })
+      .then(res => {
+        snackbarMessage.value = 'レース情報を登録しました'
+      }
+      ).catch(err => {
+        snackbarMessage.value = 'レース情報の登録に失敗しました'
+      })
       snackbar.value = true
     }
 
@@ -106,6 +107,7 @@ export default defineComponent({
       candidateJockeys,
       fetchCandidateJockey,
       createCandidateRace,
+      snackbarMessage,
       snackbar
     }
   },
