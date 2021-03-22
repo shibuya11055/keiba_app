@@ -27,7 +27,7 @@
             <td><span class="grade-area" :class="item.grade">{{ translateGrade(item.grade) }}</span></td>
             <td>{{ item.name }}</td>
             <td>
-              <v-btn class="ma-2" outlined color="indigo">詳細</v-btn>
+              <v-btn class="ma-2" outlined color="indigo" @click="toShowPage(item.id)">詳細</v-btn>
             </td>
           </tr>
         </tbody>
@@ -56,9 +56,14 @@ const useFetchExpectedRaces = () => {
 
 export default defineComponent({
   name: 'ExpectedRaceIndex',
-  setup() {
+  setup(_, context) {
     const { expectedRaces, fetchExpectedRaces } = useFetchExpectedRaces()
     const { translateGrade } = useTranslateGrade()
+    const router = context.root.$router
+
+    const toShowPage = (val: string) => {
+      router.push({ name: 'ExpectedRaceShow', params: {id: val} })
+    }
 
     onMounted(() => {
       fetchExpectedRaces()
@@ -66,7 +71,8 @@ export default defineComponent({
 
     return {
       expectedRaces,
-      translateGrade
+      translateGrade,
+      toShowPage
     }
   },
 })
