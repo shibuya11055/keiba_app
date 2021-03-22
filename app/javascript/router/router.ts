@@ -1,6 +1,6 @@
 import Vue          from 'vue'
 import VueRouter    from 'vue-router'
-import ExpectedRaceIndex from '../components/pages/expected_race/index.vue'
+import ExpectedRaceIndex from '../components/pages/expected_race/index/index.vue'
 import ExpectedRaceNew from '../components/pages/expected_race/new/new.vue'
 
 Vue.use(VueRouter)

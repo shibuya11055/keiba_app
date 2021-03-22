@@ -1,4 +1,8 @@
 class Api::V1::ExpectedRacesController < Api::V1::ApiController
+  def index
+    @opening_races = Race.opening.order(:event_date)
+  end
+
   def create
     ActiveRecord::Base.transaction do
       race = Race.new(create_params.reject{ |k, v| k == 'horse_info' })
