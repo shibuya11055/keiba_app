@@ -1,24 +1,13 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+馬券予測アプリです
 
-Things you may want to cover:
+* Ruby version 2.7.1
 
-* Ruby version
+* 起動: rails s
 
-* System dependencies
+* webpack-dev-server起動: bin/webpack-dev-server
 
-* Configuration
+* JRAデータcsv作成: rails runner ImportRaceData.new.exec
 
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+* JRAデータ投入: rails runner UploadRaceData.new.exec

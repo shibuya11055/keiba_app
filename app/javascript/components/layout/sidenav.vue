@@ -65,4 +65,7 @@ export default defineComponent({
   font-size: 25px;
   font-family: "arial black";
 }
+.navmenu {
+  max-width: 250px;
+}
 </style>
