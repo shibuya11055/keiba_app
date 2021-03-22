@@ -14,6 +14,7 @@
             <th class="text-left">
               レース名称
             </th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -25,6 +26,9 @@
             <td><span>{{ item.eventDate }}</span></td>
             <td><span class="grade-area" :class="item.grade">{{ translateGrade(item.grade) }}</span></td>
             <td>{{ item.name }}</td>
+            <td>
+              <v-btn class="ma-2" outlined color="indigo">詳細</v-btn>
+            </td>
           </tr>
         </tbody>
       </template>
@@ -41,7 +45,6 @@ const useFetchExpectedRaces = () => {
   const expectedRaces = ref([])
   const fetchExpectedRaces = async() => {
     const res = await tenAxios.get('/expected_races')
-    console.log(res)
     expectedRaces.value = res.data.expectedRaces
   }
 
