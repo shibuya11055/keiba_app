@@ -26,13 +26,7 @@ export default defineComponent({
 
 <style>
 main {
-  width: 80% !important;
-  margin: 0 0 0 auto;
-  padding: 30px !important;
-}
-.navmenu {
-  width: 20% !important;
-  background-color: snow !important;
+  margin: 10px 30px;
 }
 h1 {
   margin-bottom: 40px;

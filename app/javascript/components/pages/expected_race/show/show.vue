@@ -1,14 +1,15 @@
 <template>
   <div>
-    サンプル
+    詳細ページ
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';
+// import tenAxios from 'packs/lib/tenAxios'
 
 export default defineComponent({
-  name: 'ExpectedRaceIndex',
+  name: 'ExpectedRaceShow',
   setup() {
 
   },

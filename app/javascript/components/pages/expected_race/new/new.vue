@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>予測レース登録</h1>
-    <div class="hoge">
+    <div class="url-area">
       <registration-url />
     </div>
     <input-manual

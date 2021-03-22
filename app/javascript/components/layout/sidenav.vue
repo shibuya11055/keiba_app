@@ -1,8 +1,7 @@
 <template>
   <v-navigation-drawer
-    absolute
-    permanent
-    left
+    app
+    src="https://cdn.vuetifyjs.com/images/backgrounds/bg-2.jpg"
   >
     <template v-slot:prepend>
       <v-list-item two-line>
@@ -28,7 +27,7 @@
         </v-list-item-icon>
 
         <v-list-item-content>
-          <v-list-item-title @click="changePath(item.pathName)">{{ item.title }}</v-list-item-title>
+          <v-list-item-title class="nav-item" @click="changePath(item.pathName)" v-text="item.title"></v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -39,7 +38,7 @@
 import { defineComponent } from '@vue/composition-api';
 
 const items = [
-  { title: 'TENKEIBAについて', icon: 'mdi-access-point', pathName: '' },
+  { title: 'ABOUT', icon: 'mdi-access-point', pathName: '' },
   { title: '着順予測', icon: 'mdi-access-point', pathName: 'ExpectedRaceIndex' },
   { title: 'レース登録', icon: 'mdi-access-point', pathName: 'ExpectedRaceNew' },
   { title: '各種データ', icon: 'mdi-access-point', pathName: '' },
@@ -64,8 +63,14 @@ export default defineComponent({
 .list-title {
   font-size: 25px;
   font-family: "arial black";
+  color: #fff;
 }
-.navmenu {
-  max-width: 250px;
+.nav-item {
+  font-size: 20px;
+  font-family: "arial black";
+  color: #fff;
 }
+// .navmenu {
+//   // max-width: 250px;
+// }
 </style>
