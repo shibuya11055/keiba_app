@@ -3,6 +3,7 @@ class Race < ApplicationRecord
 
   belongs_to :track
   has_many :race_horses
+  has_many :horses, through: :race_horses
 
   enum grade: {
     g_one: 0,

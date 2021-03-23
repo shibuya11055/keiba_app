@@ -4,7 +4,47 @@ class Api::V1::ExpectedRacesController < Api::V1::ApiController
   end
 
   def show
-    @race = Race.find(params[:id])
+    @race = Race.find(100)
+
+    race_horses = @race.race_horses.order(:horse_order).includes([horse: :traner], :jockey)
+    Struct.new(
+      'HorseInfo',
+      :horse_order,
+      :name,
+      :expected_ranking,
+      :jockey_name,
+      :traner_name,
+      :last_race_name,
+      :last_race_grade,
+      :last_ranking
+    ) unless Struct::const_defined? 'HorseInfo'
+
+    @horse_info = race_horses.map do |race_horse|
+      horse = race_horse.horse
+      name = horse.name
+      # TODO: 予想着順ロジックを作る
+      expected_ranking = 0
+      jockey_name = race_horse.jockey.name
+      traner_name = horse.traner.name
+      # 前回レースの中間テーブル取得（N+1を起こしているので要修正）
+      last_race_horse = RaceHorse.joins(:horse, :race).merge(Horse.where(id: horse.id).merge(Race.finished.order(:event_date))).includes(:race, :horse).last
+      last_race_name = last_race_horse.race.name
+      last_race_grade = last_race_horse.race.grade
+      last_ranking = last_race_horse.ranking
+
+      Struct::HorseInfo.new(
+        race_horse.horse_order,
+        name,
+        expected_ranking,
+        jockey_name,
+        traner_name,
+        last_race_name,
+        last_race_grade,
+        last_ranking
+      )
+    end
+
+    render 'api/v1/expected_races/show', status: :ok
   end
 
   def create

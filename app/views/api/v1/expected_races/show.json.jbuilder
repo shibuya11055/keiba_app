@@ -7,3 +7,5 @@ json.set! :race_detail do
     json.extract! @race.track, :name, :field_type, :field_range
   end
 end
+
+json.horse_info @horse_info
