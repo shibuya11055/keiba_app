@@ -62,7 +62,7 @@ export default defineComponent({
     const router = context.root.$router
 
     const toShowPage = (val: string) => {
-      router.push({ name: 'ExpectedRaceShow', params: {id: val} })
+      router.push({ name: 'ExpectedRaceShow', params: {race_id: val} })
     }
 
     onMounted(() => {

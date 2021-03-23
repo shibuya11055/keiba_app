@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :home, only: [:index]
       # レース予想
-      resources :expected_races, only: [:index, :create] do
+      resources :expected_races, only: [:index, :create, :show] do
         collection do
           get :candidate_races
           get :candidate_horses

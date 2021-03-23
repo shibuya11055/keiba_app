@@ -3,6 +3,10 @@ class Api::V1::ExpectedRacesController < Api::V1::ApiController
     @opening_races = Race.opening.order(:event_date)
   end
 
+  def show
+    @race = Race.find(params[:id])
+  end
+
   def create
     ActiveRecord::Base.transaction do
       race = Race.new(create_params.reject{ |k, v| k == 'horse_info' })
@@ -20,6 +24,7 @@ class Api::V1::ExpectedRacesController < Api::V1::ApiController
     @races = Race.where("name LIKE ?", "%#{race_name_params[:name]}%").select(:track_id, :name).distinct
     @field_types = Track.field_types_i18n
 
+    # TODO: jbuilderでn+1
     render 'api/v1/expected_races/candidate_races', status: :ok
   end
 
