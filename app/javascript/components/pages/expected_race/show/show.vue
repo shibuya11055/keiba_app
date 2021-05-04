@@ -1,6 +1,14 @@
 <template>
   <div>
     <h1>予測レース登録</h1>
+    <div class="columns">
+      <div class="column ">
+        <span :class="['grade-area', race.grade]">{{ translateGrade(race.grade) }}</span>
+      </div>
+      <div class="column">
+        <h2>{{ race.name }}</h2>
+      </div>
+    </div>
     <v-simple-table>
       <template #default>
         <thead>
@@ -43,26 +51,31 @@
     </v-simple-table>
 
     詳細ページ{{ race_id }}
-    {{ raceDetail }}
+    {{ race }}
+    {{ track }}
     {{ horseInfo }}
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from '@vue/composition-api';
+import { computed, defineComponent, onMounted, ref } from '@vue/composition-api';
 import tenAxios from 'packs/lib/tenAxios'
+import { useTranslateGrade } from '../../../../util/translate_grade'
 
 const useFetchExpectedRaceDetail = () => {
-  const raceDetail = ref({})
+  const race = ref()
+  const track = ref()
   const horseInfo = ref([])
   const fetchExpectedRaceDetail = async(raceId: string) => {
     const res = await tenAxios.get(`/expected_races/${raceId}`)
-    raceDetail.value = res.data.raceDetail
+    race.value = res.data.raceDetail.race
+    track.value = res.data.raceDetail.track
     horseInfo.value = res.data.horseInfo
   }
 
   return {
-    raceDetail,
+    race,
+    track,
     horseInfo,
     fetchExpectedRaceDetail
   }
@@ -77,16 +90,44 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const { fetchExpectedRaceDetail, raceDetail, horseInfo } = useFetchExpectedRaceDetail()
+    const { fetchExpectedRaceDetail, race, track, horseInfo } = useFetchExpectedRaceDetail()
+    const { translateGrade } = useTranslateGrade()
 
     onMounted(() => {
       fetchExpectedRaceDetail(props.race_id)
     })
 
     return {
-      raceDetail,
-      horseInfo
+      race: computed(() => race.value || {}),
+      track,
+      horseInfo,
+      translateGrade
     }
   },
 })
 </script>
+
+<style lang="scss" scoped>
+.columns {
+  display: flex;
+}
+.column {
+  padding: 10px;
+}
+.grade-area {
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 10px 10px 10px 10px;
+  font-weight: bold;
+  display: grid;
+}
+.g_one {
+  background: #1976D2;
+}
+.g_two {
+  background: #d71a1a;
+}
+.g_three {
+  background: #268300;
+}
+</style>
