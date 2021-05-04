@@ -14,20 +14,26 @@
 <script lang='ts'>
 // import tenAxios from '../javascript/packs/lib/tenAxios'
 import Sidenav from './components/layout/sidenav.vue'
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent, ref } from '@vue/composition-api';
 
 export default defineComponent({
   name: 'App',
   components: {
     Sidenav,
+  },
+  setup() {
+    const drawer = ref(false)
+    return {
+      drawer
+    }
   }
 })
 </script>
 
 <style>
-main {
+/* main {
   margin: 10px 30px;
-}
+} */
 h1 {
   margin-bottom: 40px;
 }

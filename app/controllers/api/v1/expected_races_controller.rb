@@ -27,7 +27,7 @@ class Api::V1::ExpectedRacesController < Api::V1::ApiController
       jockey_name = race_horse.jockey.name
       traner_name = horse.traner.name
       # 前回レースの中間テーブル取得（N+1を起こしているので要修正）
-      last_race_horse = RaceHorse.joins(:horse, :race).merge(Horse.where(id: horse.id).merge(Race.finished.order(:event_date))).includes(:race, :horse).last
+      last_race_horse = RaceHorse.joins(:horse, :race).merge(Horse.where(id: horse.id).merge(Race.finished.order(:event_date))).last
       last_race_name = last_race_horse.race.name
       last_race_grade = last_race_horse.race.grade
       last_ranking = last_race_horse.ranking
