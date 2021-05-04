@@ -39,7 +39,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from '@vue/composition-api';
 import tenAxios from 'packs/lib/tenAxios'
-import { useTranslateGrade } from '../../../../util/translate_grade'
+import { useTranslateGrade } from '../../../../util/translateType'
 
 const useFetchExpectedRaces = () => {
   const expectedRaces = ref([])

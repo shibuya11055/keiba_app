@@ -9,6 +9,9 @@
         <h2>{{ race.name }}</h2>
       </div>
     </div>
+    <div class="course">
+      <p>{{ track.name }}  {{ translateField(track.fieldType) }}・{{ track.fieldRange }}m</p>
+    </div>
     <v-simple-table>
       <template #default>
         <thead>
@@ -60,7 +63,7 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted, ref } from '@vue/composition-api';
 import tenAxios from 'packs/lib/tenAxios'
-import { useTranslateGrade } from '../../../../util/translate_grade'
+import { useTranslateGrade, useTranslateField } from '../../../../util/translateType'
 
 const useFetchExpectedRaceDetail = () => {
   const race = ref()
@@ -92,6 +95,7 @@ export default defineComponent({
   setup(props) {
     const { fetchExpectedRaceDetail, race, track, horseInfo } = useFetchExpectedRaceDetail()
     const { translateGrade } = useTranslateGrade()
+    const { translateField } = useTranslateField()
 
     onMounted(() => {
       fetchExpectedRaceDetail(props.race_id)
@@ -99,9 +103,10 @@ export default defineComponent({
 
     return {
       race: computed(() => race.value || {}),
-      track,
+      track: computed(() => track.value || {}),
       horseInfo,
-      translateGrade
+      translateGrade,
+      translateField,
     }
   },
 })
@@ -112,7 +117,7 @@ export default defineComponent({
   display: flex;
 }
 .column {
-  padding: 10px;
+  padding-right: 10px;
 }
 .grade-area {
   color: #fff;
