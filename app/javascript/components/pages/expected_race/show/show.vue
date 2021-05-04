@@ -12,7 +12,10 @@
     <div class="course">
       <p>{{ track.name }}  {{ translateField(track.fieldType) }}・{{ track.fieldRange }}m</p>
     </div>
-    <v-simple-table>
+    <v-simple-table
+      fixed-header
+      height="520px"
+    >
       <template #default>
         <thead>
           <tr>
@@ -41,7 +44,7 @@
         </thead>
         <tbody>
           <tr v-for="item in horseInfo" :key="item.horseOrder">
-            <td>{{ item.horseOrder }}</td>
+            <td><span :class="['horse-order', `order-${item.horseOrder}`]">{{ item.horseOrder }}</span></td>
             <td>{{ item.name }}</td>
             <td>{{ item.expectedRanking }}</td>
             <td>{{ item.jockeyName }}</td>
@@ -52,11 +55,6 @@
         </tbody>
       </template>
     </v-simple-table>
-
-    詳細ページ{{ race_id }}
-    {{ race }}
-    {{ track }}
-    {{ horseInfo }}
   </div>
 </template>
 
@@ -134,5 +132,44 @@ export default defineComponent({
 }
 .g_three {
   background: #268300;
+}
+
+.horse-order {
+  border: solid 0.5px;
+  border-color: #fafafa;
+  padding: 10px;
+  width: 40px;
+  display: inline-block;
+  text-align: center;
+}
+
+// オーダー色付け
+.order-1, .order-2{
+  background: white;
+}
+.order-3, .order-4 {
+  background: black;
+  color: white;
+}
+.order-5, .order-6 {
+  background: red;
+  color: white;
+}
+.order-7, .order-8 {
+  background: blue;
+  color: white;
+}
+.order-9, .order-10 {
+  background: yellow;
+}
+.order-11, .order-12 {
+  background: green;
+  color: white;
+}
+.order-13, .order-14 {
+  background: orange;
+}
+.order-15, .order-16, .order-17 {
+  background: palevioletred;
 }
 </style>
