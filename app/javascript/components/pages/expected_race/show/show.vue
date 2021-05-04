@@ -1,5 +1,47 @@
 <template>
   <div>
+    <h1>予測レース登録</h1>
+    <v-simple-table>
+      <template #default>
+        <thead>
+          <tr>
+            <th>
+              馬番
+            </th>
+            <th>
+              馬名
+            </th>
+            <th>
+              予想着順
+            </th>
+            <th>
+              騎手
+            </th>
+            <th>
+              調教師
+            </th>
+            <th>
+              前回レース
+            </th>
+            <th>
+              前回着順
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in horseInfo" :key="item.horseOrder">
+            <td>{{ item.horseOrder }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.expectedRanking }}</td>
+            <td>{{ item.jockeyName }}</td>
+            <td>{{ item.tranerName }}</td>
+            <td>{{ item.lastRaceName }}</td>
+            <td>{{ item.lastRanking }}</td>
+          </tr>
+        </tbody>
+      </template>
+    </v-simple-table>
+
     詳細ページ{{ race_id }}
     {{ raceDetail }}
     {{ horseInfo }}
