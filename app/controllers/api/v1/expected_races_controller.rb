@@ -11,6 +11,7 @@ class Api::V1::ExpectedRacesController < Api::V1::ApiController
       'HorseInfo',
       :horse_order,
       :name,
+      :point_sum,
       :expected_ranking,
       :jockey_name,
       :traner_name,
@@ -19,10 +20,24 @@ class Api::V1::ExpectedRacesController < Api::V1::ApiController
       :last_ranking
     ) unless Struct::const_defined? 'HorseInfo'
 
-    @horse_info = race_horses.map do |race_horse|
+    horse_info = race_horses.map do |race_horse|
       horse = race_horse.horse
       name = horse.name
-      # TODO: 予想着順ロジックを作る
+
+      # 着順予想
+      target_races = horse.race_horses.joins(:race).merge(Race.finished)
+      # G1(持ちポイント30)
+      g_one_race = target_races.merge(Race.g_one)
+      g_one_point = g_one_race.count * Race::G_ONE_POINT - g_one_race.sum(:ranking)
+      # G2(持ちポイント25)
+      g_two_race = target_races.merge(Race.g_two)
+      g_two_point = g_two_race.count * Race::G_TWO_POINT - g_two_race.sum(:ranking)
+      # G3(持ちポイント20)
+      g_three_race = target_races.merge(Race.g_three)
+      g_three_point = g_three_race.count * Race::G_THREE_POINT - g_three_race.sum(:ranking)
+
+      point_sum = g_one_point + g_two_point + g_three_point
+
       expected_ranking = 0
       jockey_name = race_horse.jockey.name
       traner_name = horse.traner.name
@@ -35,6 +50,7 @@ class Api::V1::ExpectedRacesController < Api::V1::ApiController
       Struct::HorseInfo.new(
         race_horse.horse_order,
         name,
+        point_sum,
         expected_ranking,
         jockey_name,
         traner_name,
@@ -43,6 +59,8 @@ class Api::V1::ExpectedRacesController < Api::V1::ApiController
         last_ranking
       )
     end
+
+    @horse_info = horse_info.sort{|v| v.point_sum}.each_with_index{|v, i| v.expected_ranking = i + 1}.sort{|v| v.horse_order}
 
     render 'api/v1/expected_races/show', status: :ok
   end
