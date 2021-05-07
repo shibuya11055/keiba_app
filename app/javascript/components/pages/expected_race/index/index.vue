@@ -39,7 +39,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from '@vue/composition-api';
 import tenAxios from 'packs/lib/tenAxios'
-import { useTranslateGrade } from '../../../../util/translate_grade'
+import { useTranslateGrade } from '../../../../util/translateType'
 
 const useFetchExpectedRaces = () => {
   const expectedRaces = ref([])
@@ -62,7 +62,7 @@ export default defineComponent({
     const router = context.root.$router
 
     const toShowPage = (val: string) => {
-      router.push({ name: 'ExpectedRaceShow', params: {id: val} })
+      router.push({ name: 'ExpectedRaceShow', params: {race_id: val} })
     }
 
     onMounted(() => {

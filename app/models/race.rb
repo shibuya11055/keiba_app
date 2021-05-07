@@ -1,8 +1,13 @@
 class Race < ApplicationRecord
   acts_as_paranoid
 
+  G_ONE_POINT = 30
+  G_TWO_POINT = 25
+  G_THREE_POINT = 20
+
   belongs_to :track
   has_many :race_horses
+  has_many :horses, through: :race_horses
 
   enum grade: {
     g_one: 0,

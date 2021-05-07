@@ -9,7 +9,7 @@ Vue.use(VueRouter)
 const routes = [
   { path: '/expected_races',  name: 'ExpectedRaceIndex', component: ExpectedRaceIndex },
   { path: '/expected_races/new',  name: 'ExpectedRaceNew', component: ExpectedRaceNew },
-  { path: '/expected_races/:id',  name: 'ExpectedRaceShow', component: ExpectedRaceShow },
+  { path: '/expected_races/:race_id',  name: 'ExpectedRaceShow', component: ExpectedRaceShow, props: true },
 ];
 
 export default new VueRouter(
