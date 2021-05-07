@@ -4,7 +4,7 @@ class Api::V1::ExpectedRacesController < Api::V1::ApiController
   end
 
   def show
-    @race = Race.find(100)
+    @race = Race.find(params[:id])
 
     race_horses = @race.race_horses.order(:horse_order).includes([horse: :traner], :jockey)
     Struct.new(

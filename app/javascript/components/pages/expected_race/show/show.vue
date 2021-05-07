@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>予測レース登録</h1>
+    <h1>予測レース詳細</h1>
     <div class="columns">
       <div class="column ">
         <span :class="['grade-area', race.grade]">{{ translateGrade(race.grade) }}</span>
@@ -10,7 +10,7 @@
       </div>
     </div>
     <div class="course">
-      <p>{{ track.name }}  {{ translateField(track.fieldType) }}・{{ track.fieldRange }}m</p>
+      <p>{{ track.name }} {{ translateField(track.fieldType) }}・{{ track.fieldRange }}m</p>
     </div>
     <v-simple-table
       fixed-header
