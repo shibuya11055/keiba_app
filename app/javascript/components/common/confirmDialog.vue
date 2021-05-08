@@ -24,7 +24,7 @@
           {{ cancelText }}
         </v-btn>
         <v-btn
-          color="primary"
+          :color="btnColor"
           @click="onSubmit"
         >
           {{ submitText }}
@@ -60,6 +60,10 @@ export default defineComponent({
       type: String,
       defalut: 'OK'
     },
+    btnColor: {
+      type: String,
+      default: 'primary'
+    }
   },
   emits: ['submit', 'cancel'],
   setup(_, { emit }) {

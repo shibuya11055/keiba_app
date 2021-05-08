@@ -42,9 +42,19 @@
       :dialog="dialog"
       :description="'レースを終了とします。よろしいですか？'"
       :submitText="'終了'"
+      :btnColor="'error'"
       @submit="remove"
-      @cancel="closeDialog"
+      @cancel="dialog = false"
     />
+
+    <v-snackbar
+      v-model="isOpenSnackbar"
+      absolute
+      bottom
+      :color="snackbarColor"
+    >
+      {{ snackbarMessage }}
+    </v-snackbar>
   </div>
 </template>
 
@@ -53,6 +63,7 @@ import { defineComponent, onMounted, ref } from '@vue/composition-api';
 import tenAxios from 'packs/lib/tenAxios'
 import { useTranslateGrade } from '../../../../util/translateType'
 import ConfirmDialog from '../../../common/confirmDialog.vue'
+import { useSnackbar } from '../../../common/modules'
 
 const useFetchExpectedRaces = () => {
   const expectedRaces = ref([])
@@ -75,6 +86,8 @@ export default defineComponent({
   setup(_, context) {
     const { expectedRaces, fetchExpectedRaces } = useFetchExpectedRaces()
     const { translateGrade } = useTranslateGrade()
+    const { isOpenSnackbar, snackbarMessage, snackbarColor } = useSnackbar()
+
     const router = context.root.$router
     const dialog = ref(false)
     const selectedRemoveId = ref<number | null>(null)
@@ -88,15 +101,17 @@ export default defineComponent({
       dialog.value = true
     }
 
-    const closeDialog = () => {
-      dialog.value = false
-    }
-
-    const remove = () => {
-      console.log(selectedRemoveId.value)
-      dialog.value = false
-      selectedRemoveId.value = null
-
+    const remove = async() => {
+      await tenAxios.delete(`/races/${selectedRemoveId.value}`).then(res => {
+        fetchExpectedRaces()
+      }).catch(err => {
+        snackbarColor.value = 'error'
+        snackbarMessage.value = '処理に失敗しました。'
+      }).finally(() => {
+        dialog.value = false
+        selectedRemoveId.value = null
+        isOpenSnackbar.value = true
+      })
     }
 
     onMounted(() => {
@@ -110,7 +125,9 @@ export default defineComponent({
       remove,
       dialog,
       openDialog,
-      closeDialog,
+      snackbarMessage,
+      isOpenSnackbar,
+      snackbarColor,
     }
   },
 })
