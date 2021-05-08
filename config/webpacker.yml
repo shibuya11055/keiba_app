@@ -11,7 +11,8 @@ default: &default
 
   # Additional paths webpack should lookup modules
   # ['app/assets', 'engine/foo/app/assets']
-  resolved_paths: []
+  # 絶対パスのルートを指定(TS側でもコンパイルを通すためには、tsconfigの設定と合わせる必要がある)
+  resolved_paths: ['app/javascript']
 
   # Reload manifest.json on all requests so we reload latest compiled packs
   cache_manifest: false
