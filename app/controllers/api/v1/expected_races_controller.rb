@@ -28,13 +28,16 @@ class Api::V1::ExpectedRacesController < Api::V1::ApiController
       target_races = horse.race_horses.joins(:race).merge(Race.finished)
       # G1(持ちポイント30)
       g_one_race = target_races.merge(Race.g_one)
-      g_one_point = g_one_race.count * Race::G_ONE_POINT - g_one_race.sum(:ranking)
+      g_one_point = g_one_race.pluck(:ranking).select{ |n| n < 4 }.length * 3
+      # g_one_point = g_one_race.count * Race::G_ONE_POINT - g_one_race.sum(:ranking)
       # G2(持ちポイント25)
       g_two_race = target_races.merge(Race.g_two)
-      g_two_point = g_two_race.count * Race::G_TWO_POINT - g_two_race.sum(:ranking)
+      g_two_point = g_two_race.pluck(:ranking).select{ |n| n < 4 }.length * 2
+      # g_two_point = g_two_race.count * Race::G_TWO_POINT - g_two_race.sum(:ranking)
       # G3(持ちポイント20)
       g_three_race = target_races.merge(Race.g_three)
-      g_three_point = g_three_race.count * Race::G_THREE_POINT - g_three_race.sum(:ranking)
+      g_three_point = g_three_race.pluck(:ranking).select{ |n| n < 4 }.length * 1
+      # g_three_point = g_three_race.count * Race::G_THREE_POINT - g_three_race.sum(:ranking)
 
       point_sum = g_one_point + g_two_point + g_three_point
 
@@ -43,9 +46,9 @@ class Api::V1::ExpectedRacesController < Api::V1::ApiController
       traner_name = horse.traner.name
       # 前回レースの中間テーブル取得（N+1を起こしているので要修正）
       last_race_horse = RaceHorse.joins(:horse, :race).merge(Horse.where(id: horse.id).merge(Race.finished.order(:event_date))).last
-      last_race_name = last_race_horse.race.name
-      last_race_grade = last_race_horse.race.grade
-      last_ranking = last_race_horse.ranking
+      last_race_name = last_race_horse&.race&.name
+      last_race_grade = last_race_horse&.race&.grade
+      last_ranking = last_race_horse&.ranking
 
       Struct::HorseInfo.new(
         race_horse.horse_order,
@@ -59,9 +62,7 @@ class Api::V1::ExpectedRacesController < Api::V1::ApiController
         last_ranking
       )
     end
-
-    @horse_info = horse_info.sort{|v| v.point_sum}.each_with_index{|v, i| v.expected_ranking = i + 1}.sort{|v| v.horse_order}
-
+    @horse_info = horse_info.sort_by{|v| v.point_sum}.reverse.each_with_index{|v, i| v.expected_ranking = i + 1}.sort_by{|v| v.horse_order}
     render 'api/v1/expected_races/show', status: :ok
   end
 
@@ -79,7 +80,7 @@ class Api::V1::ExpectedRacesController < Api::V1::ApiController
   end
 
   def candidate_races
-    @races = Race.where("name LIKE ?", "%#{race_name_params[:name]}%").select(:track_id, :name).distinct
+    @races = Race.where("name LIKE ?", "%#{race_name_params[:name]}%").select(:track_id, :name).distinct.reverse
     @field_types = Track.field_types_i18n
 
     # TODO: jbuilderでn+1

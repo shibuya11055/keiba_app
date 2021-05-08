@@ -20,7 +20,7 @@ Rails.application.routes.draw do
 
       resources :races, only: [:destroy]
 
-      resources :horses, only: [:create]
+      resources :horses, only: [:index, :create]
     end
   end
 end

@@ -11,7 +11,6 @@ export const useTranslateGrade = () => {
   }
 }
 
-
 type FieldType = 'turf' | 'dirt'
 export const useTranslateField = () => {
   const translateField = (field: FieldType) => {
@@ -21,5 +20,17 @@ export const useTranslateField = () => {
 
   return {
     translateField
+  }
+}
+
+type GenderType = 'male' | 'female'
+export const useTranslateGender = () => {
+  const translateGender = (gender: GenderType) => {
+    if (gender === 'male') return '牡'
+    return '牝'
+  }
+
+  return {
+    translateGender
   }
 }

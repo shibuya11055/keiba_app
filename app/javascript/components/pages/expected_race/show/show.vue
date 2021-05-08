@@ -169,7 +169,7 @@ export default defineComponent({
 .order-13, .order-14 {
   background: orange;
 }
-.order-15, .order-16, .order-17 {
+.order-15, .order-16, .order-17, .order-18{
   background: palevioletred;
 }
 </style>

@@ -20,7 +20,6 @@
       <v-autocomplete
         v-model="selectedTrackId"
         :items="candidateRaces"
-        :search-input.sync="raceName"
         label="レース名"
         item-value="id"
         item-text="name"
@@ -207,13 +206,20 @@ export default defineComponent({
       emit('search-jockey', val)
     }
 
-    watch(
-      () => raceName.value,
-      throttle((name: string) => {
-        if (props.candidateRaces.length > 0) return
-        searchRaceName(name)
-      }, 1000)
-    )
+    const customFilter = (item, queryText, itemText) => {
+      const textOne = item.name
+      const searchText = queryText
+
+      return textOne.indexOf(searchText) > -1
+    }
+
+    // watch(
+    //   () => raceName.value,
+    //   throttle((name: string) => {
+    //     if (props.candidateRaces.length > 0) return
+    //     searchRaceName(name)
+    //   }, 1000)
+    // )
 
     watch(
       () => horseName.value,
@@ -270,6 +276,7 @@ export default defineComponent({
       raceDate,
       clearData,
       onSubmit,
+      customFilter,
     }
   }
 })

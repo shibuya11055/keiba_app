@@ -1,4 +1,9 @@
 class Api::V1::HorsesController < Api::V1::ApiController
+  def index
+    @horses = Horse.all
+    render 'api/v1/horses/index', status: :ok
+  end
+
   def create
     ActiveRecord::Base.transaction do
       horse = Horse.new(create_params)
