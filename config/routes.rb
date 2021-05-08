@@ -19,6 +19,8 @@ Rails.application.routes.draw do
       end
 
       resources :races, only: [:destroy]
+
+      resources :horses, only: [:create]
     end
   end
 end

@@ -41,10 +41,10 @@
         class="submit-area"
         justify="end"
       >
-          <v-btn depressed @click="dialog = true">
+          <v-btn depressed @click="cancelDialog = true">
             キャンセル
           </v-btn>
-          <v-btn depressed color="primary" @click="onSubmit">
+          <v-btn depressed color="primary" @click="submitDialog = true" :disabled="isDisabledSubmit()">
             登録
           </v-btn>
       </v-row>
@@ -52,12 +52,29 @@
     </div>
 
     <confirm-dialog
-      :dialog="dialog"
+      :dialog="cancelDialog"
       :description="'一覧画面に戻ります。よろしいですか？'"
       :submitText="'はい'"
       @submit="gotoIndexPage"
-      @cancel="dialog = false"
+      @cancel="cancelDialog = false"
     />
+
+    <confirm-dialog
+      :dialog="submitDialog"
+      :description="'この内容で登録します。よろしいですか？'"
+      :submitText="'はい'"
+      @submit="createHorse"
+      @cancel="submitDialog = false"
+    />
+
+    <v-snackbar
+      v-model="isOpenSnackbar"
+      absolute
+      bottom
+      :color="snackbarColor"
+    >
+      {{ snackbarMessage }}
+    </v-snackbar>
   </div>
 </template>
 
@@ -66,6 +83,7 @@ import { defineComponent, ref, watch } from '@vue/composition-api'
 import { throttle } from 'lodash';
 import tenAxios from 'packs/lib/tenAxios'
 import ConfirmDialog from 'components/common/confirmDialog.vue'
+import { useSnackbar } from 'components/common/modules'
 
 const useFetchCandidateTraner= () => {
   const candidateTraners = ref([])
@@ -88,19 +106,23 @@ export default defineComponent({
   setup(_, { root }) {
     const router = root.$router
     const { candidateTraners, fetchCandidateTraner } = useFetchCandidateTraner()
-    const dialog = ref(false)
+    const { isOpenSnackbar, snackbarMessage, snackbarColor } = useSnackbar()
+
+    const cancelDialog = ref(false)
+    const submitDialog = ref(false)
+
     const horseName = ref('')
     const selectedGender = ref('')
 
     const selectedTranerId = ref(0)
     const TranerName = ref('')
 
-    const onSubmit = () => {
-      console.log('ok')
+    const isDisabledSubmit = () => {
+      return !selectedGender.value || !selectedTranerId.value || !horseName.value
     }
 
     const gotoIndexPage = () => {
-      dialog.value = false
+      cancelDialog.value = false
       router.push({ name: 'HorseIndex' })
     }
 
@@ -112,15 +134,41 @@ export default defineComponent({
       }, 1000)
     )
 
+    const createHorse = async() => {
+      const createParams = {
+        name: horseName.value,
+        gender: selectedGender.value,
+        tranerId: selectedTranerId.value
+      }
+      tenAxios.post('horses', { ...createParams })
+      .then(res => {
+        console.log(res)
+        gotoIndexPage()
+      })
+      .catch(err => {
+        snackbarColor.value = 'error'
+        snackbarMessage.value = err.response.data['errors']
+      })
+      .finally(() => {
+        submitDialog.value = false
+        isOpenSnackbar.value = true
+      })
+    }
+
     return {
       horseName,
       selectedGender,
       selectedTranerId,
       candidateTraners,
       TranerName,
-      onSubmit,
       gotoIndexPage,
-      dialog
+      createHorse,
+      submitDialog,
+      cancelDialog,
+      isDisabledSubmit,
+      isOpenSnackbar,
+      snackbarColor,
+      snackbarMessage,
     }
   },
 })
@@ -132,6 +180,7 @@ export default defineComponent({
     button {
       width: 100px;
       margin-right: 20px;
+      margin-bottom: 20px;
     }
   }
 </style>

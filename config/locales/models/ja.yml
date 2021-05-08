@@ -1,0 +1,7 @@
+ja:
+  activerecord:
+    models:
+      horse: 馬
+    attributes:
+      horse:
+        name: 馬名
