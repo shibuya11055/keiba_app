@@ -4,9 +4,13 @@
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
     <Sidenav class="navmenu" />
     <v-main>
-      <v-container>
-        <router-view/>
-      </v-container>
+      <v-row justify="center">
+        <v-col cols="12" sm="10">
+          <v-container>
+            <router-view/>
+          </v-container>
+        </v-col>
+      </v-row>
     </v-main>
   </v-app>
 </template>

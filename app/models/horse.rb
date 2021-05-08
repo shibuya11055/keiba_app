@@ -8,4 +8,6 @@ class Horse < ApplicationRecord
     male: 0,
     female: 1
   }
+
+  validates :name, uniqueness: true
 end

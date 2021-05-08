@@ -15,6 +15,7 @@
               レース名称
             </th>
             <th></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -26,13 +27,34 @@
             <td><span>{{ item.eventDate }}</span></td>
             <td><span class="grade-area" :class="item.grade">{{ translateGrade(item.grade) }}</span></td>
             <td>{{ item.name }}</td>
-            <td>
+            <td class="text-end">
               <v-btn class="ma-2" outlined color="indigo" @click="toShowPage(item.id)">詳細</v-btn>
+            </td>
+            <td>
+              <v-btn class="ma-2" outlined color="error" @click="openDialog(item.id)">終了</v-btn>
             </td>
           </tr>
         </tbody>
       </template>
     </v-simple-table>
+
+    <confirm-dialog
+      :dialog="dialog"
+      :description="'レースを終了とします。よろしいですか？'"
+      :submitText="'終了'"
+      :btnColor="'error'"
+      @submit="remove"
+      @cancel="dialog = false"
+    />
+
+    <v-snackbar
+      v-model="isOpenSnackbar"
+      absolute
+      bottom
+      :color="snackbarColor"
+    >
+      {{ snackbarMessage }}
+    </v-snackbar>
   </div>
 </template>
 
@@ -40,6 +62,8 @@
 import { defineComponent, onMounted, ref } from '@vue/composition-api';
 import tenAxios from 'packs/lib/tenAxios'
 import { useTranslateGrade } from '../../../../util/translateType'
+import ConfirmDialog from '../../../common/confirmDialog.vue'
+import { useSnackbar } from '../../../common/modules'
 
 const useFetchExpectedRaces = () => {
   const expectedRaces = ref([])
@@ -56,13 +80,38 @@ const useFetchExpectedRaces = () => {
 
 export default defineComponent({
   name: 'ExpectedRaceIndex',
+  components: {
+    ConfirmDialog
+  },
   setup(_, context) {
     const { expectedRaces, fetchExpectedRaces } = useFetchExpectedRaces()
     const { translateGrade } = useTranslateGrade()
+    const { isOpenSnackbar, snackbarMessage, snackbarColor } = useSnackbar()
+
     const router = context.root.$router
+    const dialog = ref(false)
+    const selectedRemoveId = ref<number | null>(null)
 
     const toShowPage = (val: string) => {
       router.push({ name: 'ExpectedRaceShow', params: {race_id: val} })
+    }
+
+    const openDialog = (id: number) => {
+      selectedRemoveId.value = id
+      dialog.value = true
+    }
+
+    const remove = async() => {
+      await tenAxios.delete(`/races/${selectedRemoveId.value}`).then(res => {
+        fetchExpectedRaces()
+      }).catch(err => {
+        snackbarColor.value = 'error'
+        snackbarMessage.value = '処理に失敗しました。'
+      }).finally(() => {
+        dialog.value = false
+        selectedRemoveId.value = null
+        isOpenSnackbar.value = true
+      })
     }
 
     onMounted(() => {
@@ -72,7 +121,13 @@ export default defineComponent({
     return {
       expectedRaces,
       translateGrade,
-      toShowPage
+      toShowPage,
+      remove,
+      dialog,
+      openDialog,
+      snackbarMessage,
+      isOpenSnackbar,
+      snackbarColor,
     }
   },
 })

@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from '@vue/composition-api';
+import { defineComponent, onMounted, ref } from '@vue/composition-api';
 import InputManual from './components/input-manual.vue';
 import RegistrationUrl from './components/registration-url.vue';
 import tenAxios from 'packs/lib/tenAxios'
@@ -98,6 +98,10 @@ export default defineComponent({
       })
       snackbar.value = true
     }
+
+    onMounted(() => {
+      fetchCandidateRace('')
+    })
 
     return {
       candidateRaces,
