@@ -27,10 +27,10 @@
       <v-row justify="center">
         <v-col cols="12" sm="9">
           <v-autocomplete
-            v-model="selectedJockeyId"
-            :items="candidateJockeys"
-            :search-input.sync="jockeyName"
-            :label="'騎手'"
+            v-model="selectedTranerId"
+            :items="candidateTraners"
+            :search-input.sync="TranerName"
+            :label="'調教師'"
             item-value="id"
             item-text="name"
           ></v-autocomplete>
@@ -67,16 +67,16 @@ import { throttle } from 'lodash';
 import tenAxios from 'packs/lib/tenAxios'
 import ConfirmDialog from 'components/common/confirmDialog.vue'
 
-const useFetchCandidateJockey= () => {
-  const candidateJockeys = ref([])
-  const fetchCandidateJockey = async(name: string) => {
-    const res = await tenAxios.get('/expected_races/candidate_jockeys', { params: { name: name} })
-    candidateJockeys.value = res.data.candidateJockeys
+const useFetchCandidateTraner= () => {
+  const candidateTraners = ref([])
+  const fetchCandidateTraner = async(name: string) => {
+    const res = await tenAxios.get('/expected_races/candidate_traners', { params: { name: name} })
+    candidateTraners.value = res.data.candidateTraners
   }
 
   return {
-    candidateJockeys,
-    fetchCandidateJockey
+    candidateTraners,
+    fetchCandidateTraner
   }
 }
 
@@ -87,13 +87,13 @@ export default defineComponent({
   },
   setup(_, { root }) {
     const router = root.$router
-    const { candidateJockeys, fetchCandidateJockey } = useFetchCandidateJockey()
+    const { candidateTraners, fetchCandidateTraner } = useFetchCandidateTraner()
     const dialog = ref(false)
     const horseName = ref('')
     const selectedGender = ref('')
 
-    const selectedJockeyId = ref(0)
-    const jockeyName = ref('')
+    const selectedTranerId = ref(0)
+    const TranerName = ref('')
 
     const onSubmit = () => {
       console.log('ok')
@@ -105,19 +105,19 @@ export default defineComponent({
     }
 
     watch(
-      () => jockeyName.value,
+      () => TranerName.value,
       throttle((name: string) => {
-        if (candidateJockeys.value.length > 0) return
-        fetchCandidateJockey(name)
+        if (candidateTraners.value.length > 0) return
+        fetchCandidateTraner(name)
       }, 1000)
     )
 
     return {
       horseName,
       selectedGender,
-      selectedJockeyId,
-      candidateJockeys,
-      jockeyName,
+      selectedTranerId,
+      candidateTraners,
+      TranerName,
       onSubmit,
       gotoIndexPage,
       dialog

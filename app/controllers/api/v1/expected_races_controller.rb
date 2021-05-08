@@ -96,6 +96,11 @@ class Api::V1::ExpectedRacesController < Api::V1::ApiController
     render 'api/v1/expected_races/candidate_jockeys', status: :ok
   end
 
+  def candidate_traners
+    @traners = Traner.where("name LIKE ?", "%#{candidate_traner_params[:name]}%")
+    render 'api/v1/expected_races/candidate_traners', status: :ok
+  end
+
   private
 
   def race_name_params
@@ -111,6 +116,12 @@ class Api::V1::ExpectedRacesController < Api::V1::ApiController
   end
 
   def candidate_jockey_params
+    params.permit(
+      :name
+    )
+  end
+
+  def candidate_traner_params
     params.permit(
       :name
     )

@@ -14,6 +14,7 @@ Rails.application.routes.draw do
           get :candidate_races
           get :candidate_horses
           get :candidate_jockeys
+          get :candidate_traners
         end
       end
 
