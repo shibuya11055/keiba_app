@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   root to: 'home#index'
   get '/expected_races', to: 'home#index'
   get '/expected_races/*path',  to: 'home#index'
+  get '/horses',  to: 'home#index'
 
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
